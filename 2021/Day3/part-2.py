@@ -1,26 +1,88 @@
-file = open("2021\Day2\data.txt", "r")
+file = open("2021\Day3\data.txt", "r")
 lines = file.readlines()
 
 for i in range(len(lines)):
     lines[i] = lines[i].replace('\n', '')
     
-
 file.close()
 
-x = 0
-y = 0
-a = 0
+lineArray = lines.copy()
 
-for i in range(len(lines)):
+def getmost(data):
+    oxygenGenRating = ""
+    for j in range(12):
+        zeros = 0
+        ones = 0
+        for i in range(len(data)):
+            if data[i][j] == "0":
+                zeros+=1
+            elif data[i][j] == "1":
+                ones+=1
+        
+        mostcommon = ("0", "1")[zeros > ones]
+        
+        removeindex = []
 
-    number = int(lines[i][len(lines[i]) - 1])
+        if len(data) == 1:
+            break
 
-    if lines[i].startswith("forward"):
-        x += number
-        y += number*a
-    elif lines[i].startswith("up"):
-        a -= number
-    elif lines[i].startswith("down"):
-        a += number
+        for i in range(len(data)):
+            if data[i][j] != mostcommon:
+                
+                removeindex.append(i)
+        
+        
+        removeindex = removeindex[::-1]
 
-print (x*y)
+        for i in range(len(removeindex)):
+            data.pop(removeindex[i])
+
+
+    oxygenGenRating = data[0]
+    return oxygenGenRating
+
+def getleast(data):
+    
+    co2ScrubberRating = ""
+
+    for j in range(12):
+        zeros = 0
+        ones = 0
+        for i in range(len(data)):
+            if data[i][j] == "0":
+                zeros+=1
+            elif data[i][j] == "1":
+                ones+=1
+        
+        leastcommon = ("0", "1")[zeros <= ones]
+       
+        removeindex = []
+
+        if(len(data)==1):
+            break
+
+        for i in range(len(data)):
+            if data[i][j] != leastcommon:
+                removeindex.append(i)
+        
+        if(len(removeindex) == len(data)):
+            break
+        removeindex = removeindex[::-1]
+
+        for i in range(len(removeindex)):
+            data.pop(removeindex[i])
+
+    co2ScrubberRating = data[0]
+    return co2ScrubberRating
+
+
+
+
+newScrub = int(getmost(lines), 2)
+print(newScrub)
+
+newOxygen = int(getleast(lineArray), 2)
+
+print(newOxygen)
+
+print(newOxygen * newScrub)
